@@ -23,17 +23,28 @@ namespace XENO
             return Players.Where(x => x.Power == max).ToList();
         }
 
-        public Player GetOwner(Card card) => Players.First(x => x.Cards.Contains(card) || x.LastCard == card);
+        public Player GetOwner(Card card) => Players.First(x => x.Has(card));
 
         public Player GetOpponent(Card card) => Players.First(x => x != GetOwner(card));
+
+        public List<Card> RevealedCards => Players.SelectMany(x => x.Trash).ToList();
 
         public void Start()
         {
             Deck = Card.Deck;
             Card.Shuffle(Deck);
 
-            _rebirthCard = Deck[0];
+            var rebirthCard = Deck[0];
             Deck.RemoveAt(0);
+
+            foreach(var card in Deck)
+            {
+                if(card is Hero)
+                {
+                    card.SetRebirth(rebirthCard);
+                    break;
+                }
+            }
 
             foreach(var player in Players)
             {
@@ -41,12 +52,17 @@ namespace XENO
                 Deck.RemoveAt(0);
             }
 
-            for (var i = 0; Deck.Count > 0 && Players.All(x => x.Cards.Count == 1); i = (i + 1) % Players.Count)
+            for (var i = 0; Deck.Count > 0 && Players.All(x => x.IsAlive); i = (i + 1) % Players.Count)
             {
                 var player = Players[i];
-                Log.Output($"プレイヤー:{player.ToString()}のターン.");
+                Log.Output($"プレイヤー:{player.ToString()}のターン 残りデッキ枚数:{Deck.Count}.");
                 player.Draw(Deck);
                 player.DoAction(this);
+
+                if(player.Used<Aristocrat>() && !Players[(i + 1) % Players.Count].Used<Maiden>())
+                {
+                    break;
+                }
             }
 
             if (Players.All(x => x.Power > 0))
@@ -66,14 +82,5 @@ namespace XENO
             }
             Log.Output("");
         }
-
-        public void Rebirth(Player player)
-        {
-            Log.Output($"プレイヤー:{player.ToString()}は{_rebirthCard.ToString()}へ転生.");
-            player.Rebirth(_rebirthCard);
-            _rebirthCard = null;
-        }
-
-        private Card _rebirthCard;
     }
 }

@@ -16,6 +16,12 @@ namespace XENO.Cards
             Number = number;
         }
 
+        public virtual void SetRebirth(Card card)
+        {
+        }
+
+        public virtual Card BeReborn() => null;
+
         public virtual void InvokeOn(Game game)
         {
             Log.Output($"{ToString()}が使用された.");
@@ -58,17 +64,11 @@ namespace XENO.Cards
                 var opponent = game.GetOpponent(this);
                 var card = game.Deck[0];
                 game.Deck.RemoveAt(0);
-                Log.Output($"プレイヤー:{opponent.ToString()}は公開処刑の効果で{card.ToString()}を引いた.");
-                opponent.Cards.Add(card);
+                var cards = opponent.DrawAndRevealCards(card);
 
-                var cardNumber = byEmperor && opponent.Cards.Any(x => x is Hero) ? 10 : owner.SelectOnPublicExecution(game);
+                var cardNumber = byEmperor && cards.Any(x => x is Hero) ? 10 : owner.SelectOnPublicExecution(game);
                 Log.Output($"ナンバー:{cardNumber}を指定");
-                opponent.Discard(cardNumber);
-
-                if(cardNumber == 10 && !byEmperor)
-                {
-                    game.Rebirth(opponent);
-                }
+                opponent.Discard(cardNumber, byEmperor);
             }
         }
     }

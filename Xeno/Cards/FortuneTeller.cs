@@ -11,7 +11,7 @@
             base.InvokeOn(game);
 
             var target = game.GetOpponent(this);
-            Log.Output($"{target.ToString()}のカードは{target.Cards[0].ToString()}.");
+            Log.Output($"{target.ToString()}のカードは{target.RevealCard().ToString()}.");
         }
     }
 }

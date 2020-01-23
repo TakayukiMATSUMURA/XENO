@@ -12,8 +12,7 @@ namespace XENO.Cards
         {
             base.InvokeOn(game);
 
-            var trash = game.Players.SelectMany(x => x.Trash);
-            if (trash.Count(x => x is Boy) == 2)
+            if (game.RevealedCards.Count(x => x is Boy) == 2)
             {
                 DoPublicExecutionOn(game, false);
             }
