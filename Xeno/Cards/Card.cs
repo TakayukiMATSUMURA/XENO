@@ -66,7 +66,7 @@ namespace XENO.Cards
                 game.Deck.RemoveAt(0);
                 var cards = opponent.DrawAndRevealCards(card);
 
-                var cardNumber = byEmperor && cards.Any(x => x is Hero) ? 10 : owner.SelectOnPublicExecution(game);
+                var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : owner.SelectOnPublicExecution(game);
                 Log.Output($"ナンバー:{cardNumber}を指定");
                 opponent.Discard(cardNumber, byEmperor);
             }

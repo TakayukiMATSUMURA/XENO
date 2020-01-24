@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 namespace XENO
@@ -35,18 +34,12 @@ namespace XENO
             Card.Shuffle(Deck);
 
             var rebirthCard = Deck[0];
+
+            Deck.First(x => x is Hero).SetRebirth(rebirthCard);
+
             Deck.RemoveAt(0);
 
-            foreach(var card in Deck)
-            {
-                if(card is Hero)
-                {
-                    card.SetRebirth(rebirthCard);
-                    break;
-                }
-            }
-
-            foreach(var player in Players)
+            foreach (var player in Players)
             {
                 player.Recieve(Deck[0]);
                 Deck.RemoveAt(0);
@@ -70,7 +63,7 @@ namespace XENO
                 Log.Output("勝負");
                 foreach (var player in Players)
                 {
-                    Log.Output(player.ToString());
+                    Log.Output($"{player.Name} {player.RevealCard()}");
                 }
             }
 
@@ -78,7 +71,7 @@ namespace XENO
             Log.Output("勝者");
             foreach(var winner in winners)
             {
-                Log.Output(winner.ToString());
+                Log.Output(winner.Name);
             }
             Log.Output("");
         }

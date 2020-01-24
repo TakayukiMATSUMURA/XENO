@@ -13,7 +13,7 @@
             var owner = game.GetOwner(this);
             var opponent = game.GetOpponent(this);
 
-            Log.Output($"プレイヤー:{owner.ToString()}とプレイヤー:{opponent.ToString()}はカードを交換した.");
+            Log.Output($"プレイヤー:{owner.Name}({owner.RevealCard()})とプレイヤー:{opponent.Name}({opponent.RevealCard()})はカードを交換した.");
             owner.ExchangeCardsWith(opponent);
         }
     }

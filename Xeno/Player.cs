@@ -11,8 +11,52 @@ namespace XENO
         public interface IBrain
         {
             int MakeDecision(List<int> cardNumbers);
+            int MakeDecisionOnSoldier();
             int MakeDecisionOnSage(List<int> cardNumbers);
             int MakeDecisionOnPublicExecution(List<int> cardNumbers);
+        }
+
+        public class Console : IBrain
+        {
+            public int MakeDecision(List<int> cardNumbers)
+            {
+                return GetNumberFromReadLine(cardNumbers);
+            }
+
+            public int MakeDecisionOnSoldier()
+            {
+                return GetNumberFromReadLine(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+            }
+
+            public int MakeDecisionOnPublicExecution(List<int> cardNumbers)
+            {
+                return GetNumberFromReadLine(cardNumbers);
+            }
+
+            public int MakeDecisionOnSage(List<int> cardNumbers)
+            {
+                return GetNumberFromReadLine(cardNumbers);
+            }
+
+            private int GetNumberFromReadLine(List<int> cardNumbers)
+            {
+                var result = 0;
+                var input = string.Empty;
+                while (!cardNumbers.Contains(result))
+                {
+                    try
+                    {
+                        Log.Output($"選択するカードの番号を入力してください:({string.Join(" or ", cardNumbers.ToArray())}).");
+                        input = System.Console.ReadLine();
+                        result = int.Parse(input);
+                    }
+                    catch (Exception)
+                    {
+                        Log.Output($"入力が不正:{input}.");
+                    }
+                }
+                return result;
+            }
         }
 
         public readonly string Name;
@@ -90,8 +134,8 @@ namespace XENO
 
         public void DoAction(Game game)
         {
-            var candidates = _cards.Where(x => !(x is Hero)).Select(x => x.Number).ToList();
-            var target = _cards[0].Number == _cards[1].Number ? _cards[0].Number : _brain.MakeDecision(candidates);
+            var candidates = _cards.Where(x => !(x is Hero)).Select(x => x.Number).Distinct().ToList();
+            var target = candidates.Count == 1 ? candidates[0] : _brain.MakeDecision(candidates);
             _lastCard = _cards.First(x => x.Number == target);
             Log.Output($"プレイヤー:{ToString()}は{_lastCard}を使用.");
             Discard(_lastCard);
@@ -116,6 +160,11 @@ namespace XENO
             target._cards = tmp;
         }
 
+        public int SelectOnSoldier()
+        {
+            return _brain.MakeDecisionOnSoldier();
+        }
+
         public int SelectOnPublicExecution(Game game)
         {
             var opponent = game.GetOpponent(_cards[0]);
@@ -126,7 +175,7 @@ namespace XENO
 
         public override string ToString()
         {
-            return $"{Name}({string.Join(",", _cards.Select(x => x.ToString()).ToArray())})";
+            return _brain is Console ?  $"{Name}({string.Join(",", _cards.Select(x => x.ToString()).ToArray())})" : Name;
         }
 
         private class Random : IBrain
@@ -134,6 +183,11 @@ namespace XENO
             public int MakeDecision(List<int> cardNumbers)
             {
                 return cardNumbers[new System.Random().Next(0, cardNumbers.Count)];
+            }
+
+            public int MakeDecisionOnSoldier()
+            {
+                return new System.Random().Next(1, 10 + 1);
             }
 
             public int MakeDecisionOnSage(List<int> cardNumbers)

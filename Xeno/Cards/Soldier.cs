@@ -10,8 +10,9 @@
         {
             base.InvokeOn(game);
 
+            var owner = game.GetOwner(this);
             var opponent = game.GetOpponent(this);
-            var cardNumber = new System.Random().Next(1, 10 + 1);
+            var cardNumber = owner.SelectOnSoldier();
             Log.Output($"ナンバー:{cardNumber}を指定");
             opponent.Discard(cardNumber, false);  
         }
