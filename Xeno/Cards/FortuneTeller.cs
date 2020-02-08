@@ -9,9 +9,13 @@
         public override void InvokeOn(Game game)
         {
             base.InvokeOn(game);
+            var opponent = game.GetOpponent(this);
+            if (opponent.IsGuarding)
+            {
+                return;
+            }
 
-            var target = game.GetOpponent(this);
-            Log.Output($"{target.ToString()}のカードは{target.RevealCard().ToString()}.");
+            Log.Output($"{opponent.ToString()}のカードは{opponent.RevealCard().ToString()}.");
         }
     }
 }

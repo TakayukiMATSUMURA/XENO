@@ -49,13 +49,7 @@ namespace XENO
             {
                 var player = Players[i];
                 Log.Output($"プレイヤー:{player.ToString()}のターン 残りデッキ枚数:{Deck.Count}.");
-                player.Draw(Deck);
                 player.DoAction(this);
-
-                if(player.Used<Aristocrat>() && !Players[(i + 1) % Players.Count].Used<Maiden>())
-                {
-                    break;
-                }
             }
 
             if (Players.All(x => x.Power > 0))

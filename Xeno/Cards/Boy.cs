@@ -11,6 +11,11 @@ namespace XENO.Cards
         public override void InvokeOn(Game game)
         {
             base.InvokeOn(game);
+            var opponent = game.GetOpponent(this);
+            if (opponent.IsGuarding)
+            {
+                return;
+            }
 
             if (game.RevealedCards.Count(x => x is Boy) == 2)
             {

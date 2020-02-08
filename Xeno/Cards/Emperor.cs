@@ -9,6 +9,11 @@
         public override void InvokeOn(Game game)
         {
             base.InvokeOn(game);
+            var opponent = game.GetOpponent(this);
+            if (opponent.IsGuarding)
+            {
+                return;
+            }
 
             DoPublicExecutionOn(game, true);
         }

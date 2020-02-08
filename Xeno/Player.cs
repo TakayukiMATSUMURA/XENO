@@ -63,13 +63,15 @@ namespace XENO
 
         public readonly List<Card> Trash = new List<Card>();
 
-        public bool Used<T>() where T : Card => _lastCard is T;
-
         public int Power => _cards.Count == 0 ? 0 : _cards[0].Number;
 
         public bool Has(Card card) => _cards.Contains(card) || Trash.Contains(card) || _lastCard == card;
 
         public bool IsAlive => _cards.Count > 0;
+
+        public bool IsGuarding { get; private set; }
+
+        public Func<List<Card>, Card> Draw;
 
         public Player(string name) : this(name, new Random())
         {
@@ -79,6 +81,7 @@ namespace XENO
         {
             Name = name;
             _brain = brain;
+            Draw = DrawOneCard;
         }
 
         public void Recieve(Card card)
@@ -87,30 +90,27 @@ namespace XENO
             _cards.Add(card);
         }
 
-        public void Draw(List<Card> deck)
+        public Card DrawOneCard(List<Card> deck) => deck[0];
+
+        public void OnUseSage()
         {
-            Card card;
-            if (_lastCard is Sage)
+            Draw -= DrawOneCard;
+            Draw += (deck) =>
             {
                 var cards = deck.GetRange(0, Math.Min(deck.Count, 3));
 
                 Log.Output($"プレイヤー:{ToString()}は賢者の効果で{string.Join(",", cards.Select(x => x.ToString()).ToArray())}を見た.");
 
                 var number = _brain.MakeDecisionOnSage(cards.Select(x => x.Number).ToList());
-                card = cards.First(x => x.Number == number);
+                var card = cards.First(x => x.Number == number);
                 Card.Shuffle(deck);
-            }
-            else
-            {
-                card = deck[0];
-            }
+                return card;
+            };
+        }
 
-            Log.Output($"プレイヤー:{ToString()}は{card.ToString()}を引いた.");
-
-            _cards.Add(card);
-            deck.Remove(card);
-
-            _lastCard = null;
+        public void OnUseMaiden()
+        {
+            IsGuarding = true;
         }
 
         // 死神の効果
@@ -134,6 +134,20 @@ namespace XENO
 
         public void DoAction(Game game)
         {
+            var card = Draw(game.Deck);
+            Draw = DrawOneCard;
+
+            if (_brain is Console)
+            {
+                Log.Output($"プレイヤー:{ToString()}は{card.ToString()}を引いた.");
+            }
+
+            _cards.Add(card);
+            game.Deck.Remove(card);
+
+            _lastCard = null;
+            IsGuarding = false;
+
             var candidates = _cards.Where(x => !(x is Hero)).Select(x => x.Number).Distinct().ToList();
             var target = candidates.Count == 1 ? candidates[0] : _brain.MakeDecision(candidates);
             _lastCard = _cards.First(x => x.Number == target);
@@ -141,10 +155,7 @@ namespace XENO
             Discard(_lastCard);
 
             var opponent = game.GetOpponent(_cards[0]);
-            if (!opponent.Used<Maiden>())
-            {
-                _lastCard.InvokeOn(game);
-            }
+            _lastCard.InvokeOn(game);
         }
 
         public void Discard(int cardNumber, bool byEmperor = false)
