@@ -69,8 +69,6 @@ namespace XENO
 
         public bool IsGuarding { get; private set; }
 
-        public Func<Deck, Card> Draw;
-
         public Player(string name) : this(name, new Random())
         {
         }
@@ -79,7 +77,7 @@ namespace XENO
         {
             Name = name;
             _brain = brain;
-            Draw = DrawOneCard;
+            _draw = DrawOneCard;
         }
 
         public void Recieve(Card card)
@@ -88,12 +86,10 @@ namespace XENO
             _cards.Add(card);
         }
 
-        public Card DrawOneCard(Deck deck) => deck.Draw();
-
         public void OnUseSage()
         {
-            Draw -= DrawOneCard;
-            Draw += (deck) =>
+            _draw -= DrawOneCard;
+            _draw += (deck) =>
             {
                 var cards = new List<Card>();
                 for (var i = 0; i < 3 && deck.Count > 0; i++)
@@ -119,13 +115,13 @@ namespace XENO
         // 死神の効果
         public void DrawAndDiscard(Deck deck)
         {
-            var card = deck.Draw();
-            Log.Output($"プレイヤー:{ToString()}は死神の効果で{card.ToString()}を引いた.");
+            var newCard = deck.Draw();
+            Log.Output($"プレイヤー:{ToString()}は死神の効果で{newCard.ToString()}を引いた.");
 
-            _cards.Add(card);
+            _cards.Add(newCard);
 
-            var target = _cards[new System.Random().Next(0, _cards.Count)];
-            Discard(target.Number, false);
+            var card = _cards[new System.Random().Next(0, _cards.Count)];
+            Discard(card.Number, false);
         }
 
         // 公開処刑
@@ -141,8 +137,8 @@ namespace XENO
 
         public void DoAction(Deck deck, Player opponent)
         {
-            var card = Draw(deck);
-            Draw = DrawOneCard;
+            var card = _draw(deck);
+            _draw = DrawOneCard;
 
             if (_brain is Console)
             {
@@ -224,6 +220,10 @@ namespace XENO
         private IBrain _brain;
 
         private List<Card> _cards = new List<Card>();
+
+        private Func<Deck, Card> _draw;
+
+        private Card DrawOneCard(Deck deck) => deck.Draw();
 
         private void Discard(Card card, bool byEmperor = false)
         {
