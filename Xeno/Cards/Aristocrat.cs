@@ -15,7 +15,7 @@ namespace XENO.Cards
             Log.Output($"プレイヤー:{args.Opponent.ToString()}のカードは{args.Opponent.RevealCard()}.");
 
             var players = new List<Player> { args.Invoker, args.Opponent };
-            var losers = players.Where(x => x.Power == players.Min(y => y.Power));
+            var losers = players.Where(x => x.Power == players.Min(y => y.Power)).ToList();
 
             foreach (var loser in losers)
             {
