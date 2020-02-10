@@ -11,7 +11,7 @@ namespace XENO.Cards
         {
             _mame = name;
             Number = number;
-            CanBeGuarded = canBeGuarded;
+            _canBeGuarded = canBeGuarded;
         }
 
         public virtual void SetRebirth(Card card)
@@ -31,7 +31,7 @@ namespace XENO.Cards
         {
             Log.Output($"{ToString()}が使用された.");
 
-            if (CanBeGuarded && args.Opponent.IsGuarding)
+            if (_canBeGuarded && args.Opponent.IsGuarding)
             {
                 Log.Output("相手が乙女を使用しているため無効化された");
                 return;
@@ -39,8 +39,6 @@ namespace XENO.Cards
 
             BeActivated(args);
         }
-
-        protected readonly bool CanBeGuarded;
 
         protected virtual void BeActivated(InvokeArgments args)
         {
@@ -53,17 +51,11 @@ namespace XENO.Cards
 
         protected void DoPublicExecutionOn(Player invoker, Player opponent, Deck deck, bool byEmperor)
         {
-            if(deck.Count == 0)
-            {
-                return;
-            }
-
-            var cards = opponent.DrawAndRevealCards(deck);
-            var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : invoker.SelectOnPublicExecution(opponent);
-            Log.Output($"ナンバー:{cardNumber}を指定");
-            opponent.Discard(cardNumber, byEmperor);
+            opponent.DrawAndDiscardByOpponent(deck, invoker, byEmperor);
         }
 
         private readonly string _mame;
+
+        private readonly bool _canBeGuarded;
     }
 }

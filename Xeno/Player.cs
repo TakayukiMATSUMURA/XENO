@@ -115,6 +115,11 @@ namespace XENO
         // 死神の効果
         public void DrawAndDiscard(Deck deck)
         {
+            if (deck.Count == 0)
+            {
+                return;
+            }
+
             var newCard = deck.Draw();
             Log.Output($"プレイヤー:{ToString()}は死神の効果で{newCard.ToString()}を引いた.");
 
@@ -125,14 +130,20 @@ namespace XENO
         }
 
         // 公開処刑
-        public List<Card> DrawAndRevealCards(Deck deck)
+        public void DrawAndDiscardByOpponent(Deck deck, Player opponent, bool byEmperor)
         {
+            if (deck.Count == 0)
+            {
+                return;
+            }
+
             var card = deck.Draw();
             Log.Output($"プレイヤー:{ToString()}は公開処刑の効果で{card.ToString()}を引いた.");
-
             _cards.Add(card);
 
-            return _cards;
+            var cardNumber = _cards.Select(x => x.Number).Distinct().Count() == 1 ? _cards[0].Number : byEmperor && _cards.Any(x => x is Hero) ? 10 : opponent.SelectOnPublicExecution(opponent);
+            Log.Output($"ナンバー:{cardNumber}を指定");
+            opponent.Discard(cardNumber, byEmperor);
         }
 
         public void DoAction(Deck deck, Player opponent)

@@ -8,11 +8,6 @@
 
         protected override void BeActivated(InvokeArgments args)
         {
-            if (args.Deck.Count == 0)
-            {
-                return;
-            }
-
             args.Opponent.DrawAndDiscard(args.Deck);
         }
     }
