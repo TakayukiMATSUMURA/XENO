@@ -69,7 +69,7 @@ namespace XENO
 
         public bool IsGuarding { get; private set; }
 
-        public Func<List<Card>, Card> Draw;
+        public Func<Deck, Card> Draw;
 
         public Player(string name) : this(name, new Random())
         {
@@ -88,20 +88,25 @@ namespace XENO
             _cards.Add(card);
         }
 
-        public Card DrawOneCard(List<Card> deck) => deck[0];
+        public Card DrawOneCard(Deck deck) => deck.Draw();
 
         public void OnUseSage()
         {
             Draw -= DrawOneCard;
             Draw += (deck) =>
             {
-                var cards = deck.GetRange(0, Math.Min(deck.Count, 3));
+                var cards = new List<Card>();
+                for (var i = 0; i < 3 && deck.Count > 0; i++)
+                {
+                    cards.Add(deck.Draw());
+                }
 
                 Log.Output($"プレイヤー:{ToString()}は賢者の効果で{string.Join(",", cards.Select(x => x.ToString()).ToArray())}を見た.");
 
                 var number = _brain.MakeDecisionOnSage(cards.Select(x => x.Number).ToList());
                 var card = cards.First(x => x.Number == number);
-                Card.Shuffle(deck);
+                cards.Remove(card);
+                deck.AddAndShuffle(cards);
                 return card;
             };
         }
@@ -112,8 +117,9 @@ namespace XENO
         }
 
         // 死神の効果
-        public void DrawAndDiscard(Card card)
+        public void DrawAndDiscard(Deck deck)
         {
+            var card = deck.Draw();
             Log.Output($"プレイヤー:{ToString()}は死神の効果で{card.ToString()}を引いた.");
 
             _cards.Add(card);
@@ -123,14 +129,17 @@ namespace XENO
         }
 
         // 公開処刑
-        public List<Card> DrawAndRevealCards(Card card)
+        public List<Card> DrawAndRevealCards(Deck deck)
         {
+            var card = deck.Draw();
             Log.Output($"プレイヤー:{ToString()}は公開処刑の効果で{card.ToString()}を引いた.");
+
             _cards.Add(card);
+
             return _cards;
         }
 
-        public void DoAction(List<Card> deck, Player opponent)
+        public void DoAction(Deck deck, Player opponent)
         {
             var card = Draw(deck);
             Draw = DrawOneCard;
@@ -141,7 +150,6 @@ namespace XENO
             }
 
             _cards.Add(card);
-            deck.Remove(card);
 
             IsGuarding = false;
 

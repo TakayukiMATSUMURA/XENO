@@ -20,18 +20,12 @@ namespace XENO
 
         public void Start()
         {
-            _deck = Card.Deck;
-            Card.Shuffle(_deck);
-
-            var rebirthCard = _deck[0];
-            _deck.First(x => x is Hero).SetRebirth(rebirthCard);
-
-            _deck.RemoveAt(0);
+            _deck = new Deck();
+            _deck.Shuffle();
 
             foreach (var player in _players)
             {
-                player.Recieve(_deck[0]);
-                _deck.RemoveAt(0);
+                player.Recieve(_deck.Draw());
             }
 
             for (var i = 0; _deck.Count > 0 && _players.All(x => x.IsAlive); i = (i + 1) % _players.Count)
@@ -61,6 +55,6 @@ namespace XENO
 
         private List<Player> _players;
 
-        private List<Card> _deck;
+        private Deck _deck;
     }
 }

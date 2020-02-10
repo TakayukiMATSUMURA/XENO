@@ -12,10 +12,8 @@
             {
                 return;
             }
-            
-            var card = args.Deck[0];
-            args.Deck.RemoveAt(0);
-            args.Opponent.DrawAndDiscard(card);
+
+            args.Opponent.DrawAndDiscard(args.Deck);
         }
     }
 }

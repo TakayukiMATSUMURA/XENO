@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 namespace XENO.Cards
@@ -25,7 +24,7 @@ namespace XENO.Cards
         {
             public Player Invoker;
             public Player Opponent;
-            public List<Card> Deck;
+            public Deck Deck;
         }
 
         public void InvokeOn(InvokeArgments args)
@@ -52,41 +51,14 @@ namespace XENO.Cards
             return $"{Number}:{_mame}";
         }
 
-        public static List<Card> Deck => new List<Card>
-        {
-            new Hero(), new Emperor(),
-            new Spirit(), new Spirit(),
-            new Sage(), new Sage(),
-            new Aristocrat(), new Aristocrat(),
-            new Death(), new Death(),
-            new Maiden(), new Maiden(),
-            new FortuneTeller(), new FortuneTeller(),
-            new Soldier(), new Soldier(),
-            new Boy(), new Boy(),
-        };
-
-        public static void Shuffle(List<Card> cards)
-        {
-            for(var i = 0; i < cards.Count; i++)
-            {
-                var target = new Random().Next(0, cards.Count);
-                var tmp = cards[i];
-                cards[i] = cards[target];
-                cards[target] = tmp;
-            }
-        }
-
-        protected void DoPublicExecutionOn(Player invoker, Player opponent, List<Card> deck, bool byEmperor)
+        protected void DoPublicExecutionOn(Player invoker, Player opponent, Deck deck, bool byEmperor)
         {
             if(deck.Count == 0)
             {
                 return;
             }
 
-            var card = deck[0];
-            deck.RemoveAt(0);
-
-            var cards = opponent.DrawAndRevealCards(card);
+            var cards = opponent.DrawAndRevealCards(deck);
             var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : invoker.SelectOnPublicExecution(opponent);
             Log.Output($"ナンバー:{cardNumber}を指定");
             opponent.Discard(cardNumber, byEmperor);
