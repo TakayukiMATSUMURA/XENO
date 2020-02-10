@@ -2,7 +2,7 @@
 {
     public class Hero : Card
     {
-        public Hero() : base("英雄", 10)
+        public Hero() : base("英雄", 10, false)
         {
         }
 

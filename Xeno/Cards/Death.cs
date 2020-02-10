@@ -2,25 +2,20 @@
 {
     public class Death : Card
     {
-        public Death() : base("死神", 5)
+        public Death() : base("死神", 5, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-            var opponent = game.GetOpponent(this);
-            if (opponent.IsGuarding)
+            if (args.Deck.Count == 0)
             {
                 return;
             }
-
-            if (game.Deck.Count > 0)
-            {
-                var card = game.Deck[0];
-                game.Deck.RemoveAt(0);
-                opponent.DrawAndDiscard(card);
-            }
+            
+            var card = args.Deck[0];
+            args.Deck.RemoveAt(0);
+            args.Opponent.DrawAndDiscard(card);
         }
     }
 }

@@ -2,16 +2,13 @@
 {
     public class Sage : Card
     {
-        public Sage() : base("賢者", 7)
+        public Sage() : base("賢者", 7, false)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-
-            var owner = game.GetOwner(this);
-            owner.OnUseSage();
+            args.Invoker.OnUseSage();
         }
     }
 }

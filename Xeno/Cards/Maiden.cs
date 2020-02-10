@@ -2,16 +2,13 @@
 {
     public class Maiden : Card
     {
-        public Maiden() : base("乙女", 4)
+        public Maiden() : base("乙女", 4, false)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-
-            var owner = game.GetOwner(this);
-            owner.OnUseMaiden();
+            args.Invoker.OnUseMaiden();
         }
     }
 }

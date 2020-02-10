@@ -4,22 +4,17 @@ namespace XENO.Cards
 {
     public class Boy : Card
     {
-        public Boy() : base("少年", 1)
+        public Boy() : base("少年", 1, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-            var opponent = game.GetOpponent(this);
-            if (opponent.IsGuarding)
+            var revealedCards = args.Invoker.Trash;
+            revealedCards.AddRange(args.Opponent.Trash);
+            if (revealedCards.Count(x => x is Boy) == 2)
             {
-                return;
-            }
-
-            if (game.RevealedCards.Count(x => x is Boy) == 2)
-            {
-                DoPublicExecutionOn(game, false);
+                DoPublicExecutionOn(args.Invoker, args.Opponent, args.Deck, false);
             }
         }    
     }

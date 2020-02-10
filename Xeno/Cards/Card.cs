@@ -6,14 +6,13 @@ namespace XENO.Cards
 {
     public abstract class Card
     {
-        public readonly string Name;
-
         public readonly int Number;
 
-        public Card(string name, int number)
+        public Card(string name, int number, bool canBeGuarded)
         {
-            Name = name;
+            _mame = name;
             Number = number;
+            CanBeGuarded = canBeGuarded;
         }
 
         public virtual void SetRebirth(Card card)
@@ -22,14 +21,35 @@ namespace XENO.Cards
 
         public virtual Card BeReborn() => null;
 
-        public virtual void InvokeOn(Game game)
+        public class InvokeArgments
+        {
+            public Player Invoker;
+            public Player Opponent;
+            public List<Card> Deck;
+        }
+
+        public void InvokeOn(InvokeArgments args)
         {
             Log.Output($"{ToString()}が使用された.");
+
+            if (CanBeGuarded && args.Opponent.IsGuarding)
+            {
+                Log.Output("相手が乙女を使用しているため無効化された");
+                return;
+            }
+
+            BeActivated(args);
+        }
+
+        protected readonly bool CanBeGuarded;
+
+        protected virtual void BeActivated(InvokeArgments args)
+        {
         }
 
         public override string ToString()
         {
-            return $"{Number}:{Name}";
+            return $"{Number}:{_mame}";
         }
 
         public static List<Card> Deck => new List<Card>
@@ -56,20 +76,22 @@ namespace XENO.Cards
             }
         }
 
-        protected void DoPublicExecutionOn(Game game, bool byEmperor)
+        protected void DoPublicExecutionOn(Player invoker, Player opponent, List<Card> deck, bool byEmperor)
         {
-            if(game.Deck.Count > 0)
+            if(deck.Count == 0)
             {
-                var owner = game.GetOwner(this);
-                var opponent = game.GetOpponent(this);
-                var card = game.Deck[0];
-                game.Deck.RemoveAt(0);
-                var cards = opponent.DrawAndRevealCards(card);
-
-                var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : owner.SelectOnPublicExecution(game);
-                Log.Output($"ナンバー:{cardNumber}を指定");
-                opponent.Discard(cardNumber, byEmperor);
+                return;
             }
+
+            var card = deck[0];
+            deck.RemoveAt(0);
+
+            var cards = opponent.DrawAndRevealCards(card);
+            var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : invoker.SelectOnPublicExecution(opponent);
+            Log.Output($"ナンバー:{cardNumber}を指定");
+            opponent.Discard(cardNumber, byEmperor);
         }
+
+        private readonly string _mame;
     }
 }

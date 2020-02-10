@@ -1,30 +1,22 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace XENO.Cards
 {
     public class Aristocrat : Card
     {
-        public Aristocrat() : base("貴族", 6)
+        public Aristocrat() : base("貴族", 6, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
+            Log.Output($"プレイヤー:{args.Invoker.ToString()}のカードは{args.Invoker.RevealCard()}.");
+            Log.Output($"プレイヤー:{args.Opponent.ToString()}のカードは{args.Opponent.RevealCard()}.");
 
-            var owner = game.GetOwner(this);
-            var opponent = game.GetOpponent(this);
-            if(opponent.IsGuarding)
-            {
-                return;
-            }
+            var players = new List<Player> { args.Invoker, args.Opponent };
+            var losers = players.Where(x => x.Power == players.Min(y => y.Power));
 
-            foreach(var player in game.Players)
-            {
-                Log.Output($"プレイヤー:{player.ToString()}のカードは{player.RevealCard()}.");
-            }
-
-            var losers = game.Players.Where(x => x.Power == game.Players.Min(x => x.Power)).ToList();
             foreach (var loser in losers)
             {
                 loser.Discard(loser.Power, false);

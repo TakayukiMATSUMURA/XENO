@@ -7,13 +7,17 @@ namespace XENO.Console
     {
         static void Main(string[] args)
         {
-            var players = new List<Player>()
+            for (var i = 0; i < 100000; i++)
+            {
+                System.Console.WriteLine($"第{i + 1}ゲーム");
+                var players = new List<Player>()
             {
                 new Player("Alice"),
                 new Player("Bob")
             };
-            var game = new Game(players);
-            game.Start();
+                var game = new Game(players);
+                game.Start();
+            }
         }
     }
 }

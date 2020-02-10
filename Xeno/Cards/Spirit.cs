@@ -2,23 +2,14 @@
 {
     public class Spirit : Card
     {
-        public Spirit() : base("精霊", 8)
+        public Spirit() : base("精霊", 8, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-
-            var owner = game.GetOwner(this);
-            var opponent = game.GetOpponent(this);
-            if (opponent.IsGuarding)
-            {
-                return;
-            }
-
-            Log.Output($"プレイヤー:{owner.Name}({owner.RevealCard()})とプレイヤー:{opponent.Name}({opponent.RevealCard()})はカードを交換した.");
-            owner.ExchangeCardsWith(opponent);
+            Log.Output($"プレイヤー:{args.Invoker.Name}({args.Invoker.RevealCard()})とプレイヤー:{args.Opponent.Name}({args.Opponent.RevealCard()})はカードを交換した.");
+            args.Invoker.ExchangeCardsWith(args.Opponent);
         }
     }
 }

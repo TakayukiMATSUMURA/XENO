@@ -2,20 +2,13 @@
 {
     public class Emperor : Card
     {
-        public Emperor() : base("皇帝", 9)
+        public Emperor() : base("皇帝", 9, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-            var opponent = game.GetOpponent(this);
-            if (opponent.IsGuarding)
-            {
-                return;
-            }
-
-            DoPublicExecutionOn(game, true);
+            DoPublicExecutionOn(args.Invoker, args.Opponent, args.Deck, true);
         }
     }
 }

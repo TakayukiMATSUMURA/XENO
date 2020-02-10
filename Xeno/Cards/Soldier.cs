@@ -2,24 +2,15 @@
 {
     public class Soldier : Card
     {
-        public Soldier() : base("兵士", 2)
+        public Soldier() : base("兵士", 2, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-
-            var owner = game.GetOwner(this);
-            var opponent = game.GetOpponent(this);
-            if (opponent.IsGuarding)
-            {
-                return;
-            }
-
-            var cardNumber = owner.SelectOnSoldier();
+            var cardNumber = args.Invoker.SelectOnSoldier();
             Log.Output($"ナンバー:{cardNumber}を指定");
-            opponent.Discard(cardNumber, false);  
+            args.Opponent.Discard(cardNumber, false);  
         }
     }
 }

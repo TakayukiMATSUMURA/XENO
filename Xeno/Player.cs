@@ -65,8 +65,6 @@ namespace XENO
 
         public int Power => _cards.Count == 0 ? 0 : _cards[0].Number;
 
-        public bool Has(Card card) => _cards.Contains(card) || Trash.Contains(card) || _lastCard == card;
-
         public bool IsAlive => _cards.Count > 0;
 
         public bool IsGuarding { get; private set; }
@@ -132,9 +130,9 @@ namespace XENO
             return _cards;
         }
 
-        public void DoAction(Game game)
+        public void DoAction(List<Card> deck, Player opponent)
         {
-            var card = Draw(game.Deck);
+            var card = Draw(deck);
             Draw = DrawOneCard;
 
             if (_brain is Console)
@@ -143,19 +141,23 @@ namespace XENO
             }
 
             _cards.Add(card);
-            game.Deck.Remove(card);
+            deck.Remove(card);
 
-            _lastCard = null;
             IsGuarding = false;
 
             var candidates = _cards.Where(x => !(x is Hero)).Select(x => x.Number).Distinct().ToList();
             var target = candidates.Count == 1 ? candidates[0] : _brain.MakeDecision(candidates);
-            _lastCard = _cards.First(x => x.Number == target);
-            Log.Output($"プレイヤー:{ToString()}は{_lastCard}を使用.");
-            Discard(_lastCard);
+            var selectedCard = _cards.First(x => x.Number == target);
+            Log.Output($"プレイヤー:{ToString()}は{selectedCard}を使用.");
+            Discard(selectedCard);
 
-            var opponent = game.GetOpponent(_cards[0]);
-            _lastCard.InvokeOn(game);
+            var args = new Card.InvokeArgments
+            {
+                Invoker = this,
+                Opponent = opponent,
+                Deck = deck
+            };
+            selectedCard.InvokeOn(args);
         }
 
         public void Discard(int cardNumber, bool byEmperor = false)
@@ -176,9 +178,8 @@ namespace XENO
             return _brain.MakeDecisionOnSoldier();
         }
 
-        public int SelectOnPublicExecution(Game game)
+        public int SelectOnPublicExecution(Player opponent)
         {
-            var opponent = game.GetOpponent(_cards[0]);
             return _brain.MakeDecisionOnPublicExecution(opponent._cards.Select(x => x.Number).ToList());
         }
 
@@ -215,8 +216,6 @@ namespace XENO
         private IBrain _brain;
 
         private List<Card> _cards = new List<Card>();
-
-        private Card _lastCard;
 
         private void Discard(Card card, bool byEmperor = false)
         {

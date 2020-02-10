@@ -2,20 +2,13 @@
 {
     public class FortuneTeller : Card
     {
-        public FortuneTeller() : base("占い師", 3)
+        public FortuneTeller() : base("占い師", 3, true)
         {
         }
 
-        public override void InvokeOn(Game game)
+        protected override void BeActivated(InvokeArgments args)
         {
-            base.InvokeOn(game);
-            var opponent = game.GetOpponent(this);
-            if (opponent.IsGuarding)
-            {
-                return;
-            }
-
-            Log.Output($"{opponent.ToString()}のカードは{opponent.RevealCard().ToString()}.");
+            Log.Output($"{args.Opponent.ToString()}のカードは{args.Opponent.RevealCard().ToString()}.");
         }
     }
 }

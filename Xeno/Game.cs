@@ -7,55 +7,44 @@ namespace XENO
 
     public class Game
     {
-        public List<Player> Players;
-
-        public List<Card> Deck;
-
         public Game(List<Player> players)
         {
-            Players = players;
+            _players = players;
         }
 
         public List<Player> GetWinners()
         {
-            var max = Players.Select(x => x.Power).Max();
-            return Players.Where(x => x.Power == max).ToList();
+            var max = _players.Select(x => x.Power).Max();
+            return _players.Where(x => x.Power == max).ToList();
         }
-
-        public Player GetOwner(Card card) => Players.First(x => x.Has(card));
-
-        public Player GetOpponent(Card card) => Players.First(x => x != GetOwner(card));
-
-        public List<Card> RevealedCards => Players.SelectMany(x => x.Trash).ToList();
 
         public void Start()
         {
-            Deck = Card.Deck;
-            Card.Shuffle(Deck);
+            _deck = Card.Deck;
+            Card.Shuffle(_deck);
 
-            var rebirthCard = Deck[0];
+            var rebirthCard = _deck[0];
+            _deck.First(x => x is Hero).SetRebirth(rebirthCard);
 
-            Deck.First(x => x is Hero).SetRebirth(rebirthCard);
+            _deck.RemoveAt(0);
 
-            Deck.RemoveAt(0);
-
-            foreach (var player in Players)
+            foreach (var player in _players)
             {
-                player.Recieve(Deck[0]);
-                Deck.RemoveAt(0);
+                player.Recieve(_deck[0]);
+                _deck.RemoveAt(0);
             }
 
-            for (var i = 0; Deck.Count > 0 && Players.All(x => x.IsAlive); i = (i + 1) % Players.Count)
+            for (var i = 0; _deck.Count > 0 && _players.All(x => x.IsAlive); i = (i + 1) % _players.Count)
             {
-                var player = Players[i];
-                Log.Output($"プレイヤー:{player.ToString()}のターン 残りデッキ枚数:{Deck.Count}.");
-                player.DoAction(this);
+                var player = _players[i];
+                Log.Output($"プレイヤー:{player.ToString()}のターン 残りデッキ枚数:{_deck.Count}.");
+                player.DoAction(_deck, _players.First(x => x != player));
             }
 
-            if (Players.All(x => x.Power > 0))
+            if (_players.All(x => x.IsAlive))
             {
                 Log.Output("勝負");
-                foreach (var player in Players)
+                foreach (var player in _players)
                 {
                     Log.Output($"{player.Name} {player.RevealCard()}");
                 }
@@ -69,5 +58,9 @@ namespace XENO
             }
             Log.Output("");
         }
+
+        private List<Player> _players;
+
+        private List<Card> _deck;
     }
 }
