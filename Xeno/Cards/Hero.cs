@@ -13,7 +13,6 @@
 
         public override Card BeReborn()
         {
-            Log.Output($"{ToString()}は{_rebirth.ToString()}へ転生した.");
             return _rebirth;
         }
 

@@ -7,7 +7,7 @@ namespace XENO
         public static void Output(object message)
         {
 #if DEBUG
-            //Console.WriteLine(message);
+            Console.WriteLine(message);
 #endif
         }
     }
