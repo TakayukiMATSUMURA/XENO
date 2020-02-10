@@ -22,6 +22,7 @@ namespace XENO
         {
             _deck = new Deck();
             _deck.Shuffle();
+            _deck.SetRebirthCard();
 
             foreach (var player in _players)
             {

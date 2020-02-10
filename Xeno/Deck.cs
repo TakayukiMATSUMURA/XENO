@@ -24,10 +24,12 @@ namespace XENO
                 new Soldier(), new Soldier(),
                 new Boy(), new Boy(),
             };
+        }
 
+        public void SetRebirthCard()
+        {
             var rebirthCard = _cards[0];
             _cards.First(x => x is Hero).SetRebirth(rebirthCard);
-
             _cards.RemoveAt(0);
         }
 
