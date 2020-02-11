@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using XENO.Cards;
 
 namespace XENO
 {
-    using XENO.Cards;
-
     public class Deck
     {
         public int Count => _cards.Count;

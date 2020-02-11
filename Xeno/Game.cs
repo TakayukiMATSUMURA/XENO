@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace XENO
 {
-    using Cards;
-
     public class Game
     {
         public Game(List<Player> players)

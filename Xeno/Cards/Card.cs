@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-namespace XENO.Cards
+﻿namespace XENO.Cards
 {
     public abstract class Card
     {

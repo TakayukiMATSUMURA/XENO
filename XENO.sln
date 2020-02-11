@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xeno", "Xeno\Xeno.csproj", "{DDEC2E71-293D-43B5-8F44-32190C79F978}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XENO", "Xeno\Xeno.csproj", "{DDEC2E71-293D-43B5-8F44-32190C79F978}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{F3DC24EE-0485-47A0-A3CE-E48C12FD66B1}"
 EndProject
