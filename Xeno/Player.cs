@@ -61,7 +61,8 @@ namespace XENO
 
         public readonly string Name;
 
-        public readonly List<Card> Trash = new List<Card>();
+        private readonly List<Card> _trash = new List<Card>();
+        public List<Card> Trash => new List<Card>(_trash);
 
         public int Power => _cards.Count == 0 ? 0 : _cards[0].Number;
 
@@ -245,7 +246,7 @@ namespace XENO
 
             Log.Output($"プレイヤー:{ToString()}は{card.ToString()}を捨てた.");
 
-            Trash.Add(card);
+            _trash.Add(card);
             _cards.Remove(card);
 
             if (card is Hero)
