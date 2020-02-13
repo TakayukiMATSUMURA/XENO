@@ -142,7 +142,7 @@ namespace XENO
             Log.Output($"プレイヤー:{ToString()}は公開処刑の効果で{card.ToString()}を引いた.");
             _cards.Add(card);
 
-            var cardNumber = _cards.Select(x => x.Number).Distinct().Count() == 1 ? _cards[0].Number : byEmperor && _cards.Any(x => x is Hero) ? 10 : opponent.SelectOnPublicExecution(opponent);
+            var cardNumber = _cards.Select(x => x.Number).Distinct().Count() == 1 ? _cards[0].Number : byEmperor && _cards.Any(x => x is Hero) ? 10 : opponent.SelectOnPublicExecution(this);
             Log.Output($"ナンバー:{cardNumber}を指定");
             opponent.Discard(cardNumber, byEmperor);
         }
