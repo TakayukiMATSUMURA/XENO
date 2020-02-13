@@ -6,6 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xeno\Xeno.csproj" />
+    <ProjectReference Include="..\Xeno\XENO.csproj" />
   </ItemGroup>
 </Project>
