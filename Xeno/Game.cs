@@ -5,9 +5,10 @@ namespace XENO
 {
     public class Game
     {
-        public Game(List<Player> players)
+        public Game(List<Player> players, Deck deck)
         {
             _players = players;
+            _deck = deck;
         }
 
         public List<Player> GetWinners()
@@ -18,15 +19,6 @@ namespace XENO
 
         public void Start()
         {
-            _deck = new Deck();
-            _deck.Shuffle();
-            _deck.SetRebirthCard();
-
-            foreach (var player in _players)
-            {
-                player.Recieve(_deck.Draw());
-            }
-
             for (var i = 0; _deck.Count > 0 && _players.All(x => x.IsAlive); i = (i + 1) % _players.Count)
             {
                 var player = _players[i];
@@ -52,8 +44,8 @@ namespace XENO
             Log.Output("");
         }
 
-        private List<Player> _players;
+        private readonly List<Player> _players;
 
-        private Deck _deck;
+        private readonly Deck _deck;
     }
 }

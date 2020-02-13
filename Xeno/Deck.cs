@@ -25,11 +25,20 @@ namespace XENO
             };
         }
 
+        public Deck(List<Card> cards)
+        {
+            _cards = cards;
+        }
+
         public void SetRebirthCard()
         {
-            var rebirthCard = _cards[0];
-            _cards.First(x => x is Hero).SetRebirth(rebirthCard);
-            _cards.RemoveAt(0);
+            SetRebirthCard(_cards[0]);
+        }
+
+        public void SetRebirthCard(Card card)
+        {
+            _cards.First(x => x is Hero).SetRebirth(card);
+            _cards.Remove(card);
         }
 
         public Card Draw()
