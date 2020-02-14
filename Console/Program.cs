@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace XENO.Console
 {
@@ -15,6 +16,14 @@ namespace XENO.Console
                     new Player("Alice", new Player.Console()),
                     new Player("Bob")
                 };
+                
+                var alice = players[0];
+                alice.OnReceive += (card) => Log.Output($"プレイヤー:{alice.ToString()}に{card.ToString()}が配られた.");
+                alice.OnAdd += (card) => Log.Output($"プレイヤー:{alice.ToString()}は{card.ToString()}を引いた.");
+                alice.OnSage += (cards) => Log.Output($"プレイヤー:{alice.ToString()}は賢者の効果で{string.Join(",", cards.Select(x => x.ToString()).ToArray())}を見た.");
+                alice.OnUse += (card) => Log.Output($"プレイヤー:{alice.ToString()}は{card}を使用.");
+                alice.OnDiscard += (card) => Log.Output($"プレイヤー:{alice.ToString()}は{card.ToString()}を捨てた.");
+                
                 var deck = new Deck();
                 deck.Shuffle();
                 deck.SetRebirthCard();
