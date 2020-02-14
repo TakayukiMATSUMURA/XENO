@@ -70,6 +70,12 @@ namespace XENO
 
         public bool IsGuarding { get; private set; }
 
+        public event Action<Card> OnReceive = delegate { };
+        public event Action<Card> OnAdd = delegate { };
+        public event Action<List<Card>> OnSage = delegate { };
+        public event Action<Card> OnUse = delegate { };
+        public event Action<Card> OnDiscard = delegate { };
+
         public Player(string name) : this(name, new Random())
         {
         }
@@ -82,9 +88,9 @@ namespace XENO
         }
 
         public void Recieve(Card card)
-        {
-            Log.Output($"プレイヤー:{ToString()}に{card.ToString()}が配られた.");
+        {            
             _cards.Add(card);
+            OnReceive(card);
         }
 
         public void OnUseSage()
@@ -98,7 +104,7 @@ namespace XENO
                     cards.Add(deck.Draw());
                 }
 
-                Log.Output($"プレイヤー:{ToString()}は賢者の効果で{string.Join(",", cards.Select(x => x.ToString()).ToArray())}を見た.");
+                OnSage(cards);
 
                 var number = _brain.MakeDecisionOnSage(cards.Select(x => x.Number).ToList());
                 var card = cards.First(x => x.Number == number);
@@ -121,13 +127,12 @@ namespace XENO
                 return;
             }
 
-            var newCard = deck.Draw();
-            Log.Output($"プレイヤー:{ToString()}は死神の効果で{newCard.ToString()}を引いた.");
+            var card = deck.Draw();
+            _cards.Add(card);
+            OnAdd(card);
 
-            _cards.Add(newCard);
-
-            var card = _cards[new System.Random().Next(0, _cards.Count)];
-            Discard(card.Number, false);
+            var cardNumber = _cards[new System.Random().Next(0, _cards.Count)].Number;
+            Discard(cardNumber, false);
         }
 
         // 公開処刑
@@ -139,11 +144,10 @@ namespace XENO
             }
 
             var card = deck.Draw();
-            Log.Output($"プレイヤー:{ToString()}は公開処刑の効果で{card.ToString()}を引いた.");
             _cards.Add(card);
+            OnAdd(card);
 
             var cardNumber = _cards.Select(x => x.Number).Distinct().Count() == 1 ? _cards[0].Number : byEmperor && _cards.Any(x => x is Hero) ? 10 : opponent.SelectOnPublicExecution(this);
-            Log.Output($"ナンバー:{cardNumber}を指定");
             opponent.Discard(cardNumber, byEmperor);
         }
 
@@ -154,7 +158,7 @@ namespace XENO
 
             if (_brain is Console)
             {
-                Log.Output($"プレイヤー:{ToString()}は{card.ToString()}を引いた.");
+                OnAdd(card);
             }
 
             _cards.Add(card);
@@ -164,7 +168,7 @@ namespace XENO
             var candidates = _cards.Where(x => !(x is Hero)).Select(x => x.Number).Distinct().ToList();
             var target = candidates.Count == 1 ? candidates[0] : _brain.MakeDecision(candidates);
             var selectedCard = _cards.First(x => x.Number == target);
-            Log.Output($"プレイヤー:{ToString()}は{selectedCard}を使用.");
+            OnUse(selectedCard);
             Discard(selectedCard);
 
             var args = new Card.InvokeArgments
@@ -244,10 +248,10 @@ namespace XENO
                 return;
             }
 
-            Log.Output($"プレイヤー:{ToString()}は{card.ToString()}を捨てた.");
-
             _trash.Add(card);
             _cards.Remove(card);
+
+            OnDiscard(card);
 
             if (card is Hero)
             {
