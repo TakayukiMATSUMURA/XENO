@@ -23,7 +23,8 @@ namespace XENO.Console
                 alice.OnSage += (cards) => Log.Output($"プレイヤー:{alice.ToString()}は賢者の効果で{string.Join(",", cards.Select(x => x.ToString()).ToArray())}を見た.");
                 alice.OnUse += (card) => Log.Output($"プレイヤー:{alice.ToString()}は{card}を使用.");
                 alice.OnDiscard += (card) => Log.Output($"プレイヤー:{alice.ToString()}は{card.ToString()}を捨てた.");
-                
+                alice.OnRebirth += (card) => Log.Output($"{alice.ToString()}は{card.ToString()}へ転生した.");
+
                 var deck = new Deck();
                 deck.Shuffle();
                 deck.SetRebirthCard();
