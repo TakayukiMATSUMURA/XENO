@@ -75,6 +75,7 @@ namespace XENO
         public event Action<List<Card>> OnSage = delegate { };
         public event Action<Card> OnUse = delegate { };
         public event Action<Card> OnDiscard = delegate { };
+        public event Action<Card> OnRebirth = delegate { };
 
         public Player(string name) : this(name, new Random())
         {
@@ -261,7 +262,9 @@ namespace XENO
                 }
                 if (!byEmperor)
                 {
-                    _cards.Add(card.BeReborn());
+                    var rebirthCard = card.BeReborn();
+                    _cards.Add(rebirthCard);
+                    OnRebirth(rebirthCard);
                 }
             }
         }
