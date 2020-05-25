@@ -48,10 +48,9 @@ namespace XENO
             return card;
         }
 
-        public void AddAndShuffle(List<Card> cards)
+        public void Add(List<Card> cards)
         {
             _cards.AddRange(cards);
-            Shuffle();
         }
 
         public void Shuffle()

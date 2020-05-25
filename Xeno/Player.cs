@@ -110,7 +110,8 @@ namespace XENO
                 var number = _brain.MakeDecisionOnSage(cards.Select(x => x.Number).ToList());
                 var card = cards.First(x => x.Number == number);
                 cards.Remove(card);
-                deck.AddAndShuffle(cards);
+                deck.Add(cards);
+                deck.Shuffle();
                 return card;
             };
         }
