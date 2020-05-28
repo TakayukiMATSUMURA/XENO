@@ -116,7 +116,7 @@ namespace XENO
             };
         }
 
-        public void OnUseMaiden()
+        public void Guard()
         {
             IsGuarding = true;
         }
