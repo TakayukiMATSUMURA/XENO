@@ -121,22 +121,6 @@ namespace XENO
             IsGuarding = true;
         }
 
-        // 死神の効果
-        public void DrawAndDiscard(Deck deck)
-        {
-            if (deck.Count == 0)
-            {
-                return;
-            }
-
-            var card = deck.Draw();
-            _cards.Add(card);
-            OnAdd(card);
-
-            var cardNumber = _cards[new System.Random().Next(0, _cards.Count)].Number;
-            Discard(cardNumber, false);
-        }
-
         // 公開処刑
         public void DrawAndDiscardByOpponent(Deck deck, Player opponent, bool byEmperor)
         {
@@ -186,6 +170,12 @@ namespace XENO
         {
             var card = _cards.FirstOrDefault(x => x.Number == cardNumber);
             Discard(card, byEmperor);
+        }
+
+        public void DiscardAtRandom()
+        {
+            var cardNumber = _cards[new System.Random().Next(0, _cards.Count)].Number;
+            Discard(cardNumber);
         }
 
         public void ExchangeCardsWith(Player target)
