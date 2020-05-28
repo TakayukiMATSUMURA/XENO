@@ -56,7 +56,7 @@ namespace XENO.Cards
             }
 
             var card = deck.Draw();
-            opponent.Recieve(card);
+            opponent.Receive(card);
             var cards = opponent.Cards;
             var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : invoker.SelectOnPublicExecution(opponent);
             opponent.Discard(cardNumber, byEmperor);

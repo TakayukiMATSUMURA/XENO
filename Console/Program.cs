@@ -20,7 +20,7 @@ namespace XENO.Console
                 deck.SetRebirthCard();
                 foreach(var player in players)
                 {
-                    player.Recieve(deck.Draw());
+                    player.Receive(deck.Draw());
                 }
                 var game = new Game(players, deck);
                 game.Start();

@@ -16,7 +16,7 @@
             }
 
             var card = deck.Draw();
-            invoker.Recieve(card);
+            invoker.Receive(card);
             args.Invoker.DiscardAtRandom();
         }
     }

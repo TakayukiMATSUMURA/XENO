@@ -88,7 +88,7 @@ namespace XENO
             _draw = DrawOneCard;
         }
 
-        public void Recieve(Card card)
+        public void Receive(Card card)
         {            
             _cards.Add(card);
             OnReceive(card);
@@ -131,7 +131,7 @@ namespace XENO
                 OnAdd(card);
             }
 
-            _cards.Add(card);
+            Receive(card);
 
             IsGuarding = false;
 
