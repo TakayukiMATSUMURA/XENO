@@ -12,8 +12,8 @@ namespace XENO.Cards
 
         protected override void BeActivated(InvokeArgments args)
         {
-            Log.Output($"プレイヤー:{args.Invoker.ToString()}のカードは{args.Invoker.RevealCard()}.");
-            Log.Output($"プレイヤー:{args.Opponent.ToString()}のカードは{args.Opponent.RevealCard()}.");
+            Log.Output($"プレイヤー:{args.Invoker.ToString()}のカードは{args.Invoker.Card}.");
+            Log.Output($"プレイヤー:{args.Opponent.ToString()}のカードは{args.Opponent.Card}.");
 
             if (_isFace)
             {

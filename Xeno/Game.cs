@@ -31,7 +31,7 @@ namespace XENO
                 Log.Output("勝負");
                 foreach (var player in _players)
                 {
-                    Log.Output($"{player.Name} {player.RevealCard()}");
+                    Log.Output($"{player.Name} {player.Card}");
                 }
             }
 

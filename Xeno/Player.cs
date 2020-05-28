@@ -121,22 +121,6 @@ namespace XENO
             IsGuarding = true;
         }
 
-        // 公開処刑
-        public void DrawAndDiscardByOpponent(Deck deck, Player opponent, bool byEmperor)
-        {
-            if (deck.Count == 0)
-            {
-                return;
-            }
-
-            var card = deck.Draw();
-            _cards.Add(card);
-            OnAdd(card);
-
-            var cardNumber = _cards.Select(x => x.Number).Distinct().Count() == 1 ? _cards[0].Number : byEmperor && _cards.Any(x => x is Hero) ? 10 : opponent.SelectOnPublicExecution(this);
-            Discard(cardNumber, byEmperor);
-        }
-
         public void DoAction(Deck deck, Player opponent)
         {
             var card = _draw(deck);
@@ -195,7 +179,8 @@ namespace XENO
             return _brain.MakeDecisionOnPublicExecution(opponent._cards.Select(x => x.Number).ToList());
         }
 
-        public Card RevealCard() => _cards[0];
+        public Card Card => _cards[0];
+        public List<Card> Cards => new List<Card>(_cards);
 
         public override string ToString()
         {

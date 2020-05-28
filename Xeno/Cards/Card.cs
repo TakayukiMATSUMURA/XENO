@@ -1,4 +1,6 @@
-﻿namespace XENO.Cards
+﻿using System.Linq;
+
+namespace XENO.Cards
 {
     public abstract class Card
     {
@@ -48,7 +50,16 @@
 
         protected void DoPublicExecutionOn(Player invoker, Player opponent, Deck deck, bool byEmperor)
         {
-            opponent.DrawAndDiscardByOpponent(deck, invoker, byEmperor);
+            if (deck.Count == 0)
+            {
+                return;
+            }
+
+            var card = deck.Draw();
+            opponent.Recieve(card);
+            var cards = opponent.Cards;
+            var cardNumber = cards.Select(x => x.Number).Distinct().Count() == 1 ? cards[0].Number : byEmperor && cards.Any(x => x is Hero) ? 10 : invoker.SelectOnPublicExecution(opponent);
+            opponent.Discard(cardNumber, byEmperor);
         }
 
         private readonly string _mame;

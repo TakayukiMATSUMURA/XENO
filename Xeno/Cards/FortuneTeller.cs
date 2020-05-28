@@ -8,7 +8,7 @@
 
         protected override void BeActivated(InvokeArgments args)
         {
-            Log.Output($"{args.Opponent.ToString()}のカードは{args.Opponent.RevealCard().ToString()}.");
+            Log.Output($"{args.Opponent.ToString()}のカードは{args.Opponent.Card.ToString()}.");
         }
     }
 }
