@@ -150,7 +150,7 @@ namespace XENO
             OnAdd(card);
 
             var cardNumber = _cards.Select(x => x.Number).Distinct().Count() == 1 ? _cards[0].Number : byEmperor && _cards.Any(x => x is Hero) ? 10 : opponent.SelectOnPublicExecution(this);
-            opponent.Discard(cardNumber, byEmperor);
+            Discard(cardNumber, byEmperor);
         }
 
         public void DoAction(Deck deck, Player opponent)
