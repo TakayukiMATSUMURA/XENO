@@ -8,7 +8,7 @@
 
         protected override void BeActivated(InvokeArgments args)
         {
-            args.Invoker.OnUseSage();
+            args.Invoker.OverrideNextDraw();
         }
     }
 }

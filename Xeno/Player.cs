@@ -43,10 +43,9 @@ namespace XENO
             OnReceive(card);
         }
 
-        public void OnUseSage()
+        public void OverrideNextDraw()
         {
-            _draw -= DrawOneCard;
-            _draw += (deck) =>
+            _draw = (deck) =>
             {
                 var cards = new List<Card>();
                 for (var i = 0; i < 3 && deck.Count > 0; i++)
