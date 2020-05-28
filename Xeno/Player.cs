@@ -1,64 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using XENO.Brains;
+using XENO.Cards;
 
 namespace XENO
 {
-    using Cards;
-
     public class Player
-    {
-        public interface IBrain
-        {
-            int MakeDecision(List<int> cardNumbers);
-            int MakeDecisionOnSoldier();
-            int MakeDecisionOnSage(List<int> cardNumbers);
-            int MakeDecisionOnPublicExecution(List<int> cardNumbers);
-        }
-
-        public class Console : IBrain
-        {
-            public int MakeDecision(List<int> cardNumbers)
-            {
-                return GetNumberFromReadLine(cardNumbers);
-            }
-
-            public int MakeDecisionOnSoldier()
-            {
-                return GetNumberFromReadLine(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-            }
-
-            public int MakeDecisionOnPublicExecution(List<int> cardNumbers)
-            {
-                return GetNumberFromReadLine(cardNumbers);
-            }
-
-            public int MakeDecisionOnSage(List<int> cardNumbers)
-            {
-                return GetNumberFromReadLine(cardNumbers);
-            }
-
-            private int GetNumberFromReadLine(List<int> cardNumbers)
-            {
-                var result = 0;
-                var input = string.Empty;
-                while (!cardNumbers.Contains(result))
-                {
-                    try
-                    {
-                        Log.Output($"選択するカードの番号を入力してください:({string.Join(" or ", cardNumbers.ToArray())}).");
-                        input = System.Console.ReadLine();
-                        result = int.Parse(input);
-                    }
-                    catch (Exception)
-                    {
-                        Log.Output($"入力が不正:{input}.");
-                    }
-                }
-                return result;
-            }
-        }
-
+    {        
         public readonly string Name;
 
         private readonly List<Card> _trash = new List<Card>();
@@ -77,7 +26,7 @@ namespace XENO
         public event Action<Card> OnDiscard = delegate { };
         public event Action<Card> OnRebirth = delegate { };
 
-        public Player(string name) : this(name, new Random())
+        public Player(string name) : this(name, new AtRandom())
         {
         }
 
@@ -158,8 +107,8 @@ namespace XENO
 
         public void DiscardAtRandom()
         {
-            var cardNumber = _cards[new System.Random().Next(0, _cards.Count)].Number;
-            Discard(cardNumber);
+            var card = _cards[new Random().Next(0, _cards.Count)];
+            Discard(card);
         }
 
         public void ExchangeCardsWith(Player target)
@@ -184,30 +133,7 @@ namespace XENO
 
         public override string ToString()
         {
-            return _brain is Console ?  $"{Name}({string.Join(",", _cards.Select(x => x.ToString()).ToArray())})" : Name;
-        }
-
-        private class Random : IBrain
-        {
-            public int MakeDecision(List<int> cardNumbers)
-            {
-                return cardNumbers[new System.Random().Next(0, cardNumbers.Count)];
-            }
-
-            public int MakeDecisionOnSoldier()
-            {
-                return new System.Random().Next(1, 10 + 1);
-            }
-
-            public int MakeDecisionOnSage(List<int> cardNumbers)
-            {
-                return cardNumbers[new System.Random().Next(0, cardNumbers.Count)];
-            }
-
-            public int MakeDecisionOnPublicExecution(List<int> cardNumbers)
-            {
-                return cardNumbers[new System.Random().Next(0, cardNumbers.Count)];
-            }
+            return _brain is ConsoleInput ?  $"{Name}({string.Join(",", _cards.Select(x => x.ToString()).ToArray())})" : Name;
         }
 
         private IBrain _brain;
