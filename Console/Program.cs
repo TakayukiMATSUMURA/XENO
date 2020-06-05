@@ -13,7 +13,7 @@ namespace XENO.Console
                 System.Console.WriteLine($"第{i + 1}ゲーム");
                 var players = new List<Player>()
                 {               
-                    new Player("Alice", new Player.Console()),
+                    new Player("Alice", new Brains.ConsoleInput()),
                     new Player("Bob")
                 };
                 
