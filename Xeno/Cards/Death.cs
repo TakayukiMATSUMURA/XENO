@@ -8,7 +8,6 @@
 
         protected override void BeActivated(InvokeArgments args)
         {
-            var invoker = args.Invoker;
             var deck = args.Deck;
             if (deck.Count == 0)
             {
@@ -16,8 +15,9 @@
             }
 
             var card = deck.Draw();
-            invoker.Receive(card);
-            args.Invoker.DiscardAtRandom();
+            var opponent = args.Opponent;
+            opponent.Receive(card);
+            opponent.DiscardAtRandom();
         }
     }
 }
