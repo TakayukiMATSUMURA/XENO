@@ -8,7 +8,7 @@ namespace XENO.Console
         static void Main(string[] args)
         {
             var counter = new int[2];
-            for (var i = 0; i < 100000; i++)
+            for (var i = 0; i < 10; i++)
             {
                 System.Console.WriteLine($"第{i + 1}ゲーム");
                 var players = new List<Player>()
