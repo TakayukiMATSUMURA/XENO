@@ -38,9 +38,9 @@ namespace XENO
         }
 
         public void Receive(Card card)
-        {            
-            _cards.Add(card);
+        {
             OnReceive(card);
+            _cards.Add(card);
         }
 
         public void OverrideNextDraw()
@@ -150,10 +150,10 @@ namespace XENO
                 return;
             }
 
+            OnDiscard(card);
+
             _trash.Add(card);
             _cards.Remove(card);
-
-            OnDiscard(card);
 
             if (card is Hero)
             {
