@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XENO", "Xeno\XENO.csproj", "{DDEC2E71-293D-43B5-8F44-32190C79F978}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{F3DC24EE-0485-47A0-A3CE-E48C12FD66B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{E838EA2E-B8DA-4C68-98F8-522E40E4A956}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +15,9 @@ Global
 		{DDEC2E71-293D-43B5-8F44-32190C79F978}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDEC2E71-293D-43B5-8F44-32190C79F978}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDEC2E71-293D-43B5-8F44-32190C79F978}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3DC24EE-0485-47A0-A3CE-E48C12FD66B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3DC24EE-0485-47A0-A3CE-E48C12FD66B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3DC24EE-0485-47A0-A3CE-E48C12FD66B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3DC24EE-0485-47A0-A3CE-E48C12FD66B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E838EA2E-B8DA-4C68-98F8-522E40E4A956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E838EA2E-B8DA-4C68-98F8-522E40E4A956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E838EA2E-B8DA-4C68-98F8-522E40E4A956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E838EA2E-B8DA-4C68-98F8-522E40E4A956}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
